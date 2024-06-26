@@ -1,0 +1,18 @@
+=> creating model MCNet
+100%|██████████| 4940/4940 [23:44<00:00,  3.47it/s]
+WT Dice: 0.8000
+TC Dice: 0.8206
+ET Dice: 0.7102
+=============
+WT PPV: 0.8884
+TC PPV: 0.9129
+ET PPV: 0.7869
+=============
+WT sensitivity: 0.7989
+TC sensitivity: 0.8479
+ET sensitivity: 0.7402
+=============
+WT Hausdorff: 2.7193
+TC Hausdorff: 1.7437
+ET Hausdorff: 2.9013
+=============
