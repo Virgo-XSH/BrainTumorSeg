@@ -1,0 +1,11 @@
+.idea/
+__pycache__/
+data/
+logs/
+output3/
+output4/
+models/
+README.md
+*.zip
+*.png
+
