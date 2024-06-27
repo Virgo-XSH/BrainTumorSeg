@@ -162,11 +162,11 @@ def generate(outputImg_path, outputMask_path, path_list, flag='train'):
         t1ce_array_nor = normalize(t1ce_array)
         t2_array_nor = normalize(t2_array)
         # 裁剪(偶数才行)
-        flair_crop = crop_ceter(flair_array_nor, 192, 160)
-        t1_crop = crop_ceter(t1_array_nor, 192, 160)
-        t1ce_crop = crop_ceter(t1ce_array_nor, 192, 160)
-        t2_crop = crop_ceter(t2_array_nor, 192, 160)
-        mask_crop = crop_ceter(mask_array, 192, 160)
+        flair_crop = crop_ceter(flair_array_nor, 192, 192)
+        t1_crop = crop_ceter(t1_array_nor, 192, 192)
+        t1ce_crop = crop_ceter(t1ce_array_nor, 192, 192)
+        t2_crop = crop_ceter(t2_array_nor, 192, 192)
+        mask_crop = crop_ceter(mask_array, 192, 192)
         print((path_list[subsetindex]))
         # 切片处理,并去掉没有病灶的切片
         for n_slice in range(flair_crop.shape[0]):
