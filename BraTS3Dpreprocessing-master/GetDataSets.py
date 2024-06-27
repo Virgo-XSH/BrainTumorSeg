@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 @Author: XSH
-@Date: 2024-03-30 
+@Date: 
 @Description:  
 """
 # !/usr/bin/env python
@@ -128,7 +128,7 @@ def crop_ceter(img, croph, cropw):
     startw = width // 2 - (cropw // 2)
     return img[:, starth:starth + croph, startw:startw + cropw]
 
-BLOCKSIZE = (160, 192, 152)  # 每个分块的大小
+BLOCKSIZE = (160, 192, 192)  # 每个分块的大小
 
 def generate(outputImg_path, outputMask_path, pathhgg_list, flag='train'):
     if not os.path.exists(outputImg_path):
@@ -156,17 +156,6 @@ def generate(outputImg_path, outputMask_path, pathhgg_list, flag='train'):
         t2_array = sitk.GetArrayFromImage(t2_src)
         mask_array = sitk.GetArrayFromImage(mask)
 
-        # indexes = [0, 1, 2, 3, 4, 151, 152, 153, 154]
-        #
-        # flair_array = np.delete(flair_array, indexes, axis=0)
-        #
-        # t1_array = np.delete(t1_array, indexes, axis=0)
-        #
-        # t1ce_array = np.delete(t1ce_array, indexes, axis=0)
-        #
-        # t2_array = np.delete(t2_array, indexes, axis=0)
-        #
-        # mask_array = np.delete(mask_array, indexes, axis=0)
         myblackslice = np.zeros([240, 240])
         flair_array = np.insert(flair_array, 0, myblackslice, axis=0)
         flair_array = np.insert(flair_array, 0, myblackslice, axis=0)
@@ -202,65 +191,16 @@ def generate(outputImg_path, outputMask_path, pathhgg_list, flag='train'):
         t2_array_nor = normalize(t2_array)
 
         # 4、裁剪
-        flair_crop = crop_ceter(flair_array_nor, 192, 152)
-        t1_crop = crop_ceter(t1_array_nor, 192, 152)
-        t1ce_crop = crop_ceter(t1ce_array_nor, 192, 152)
-        t2_crop = crop_ceter(t2_array_nor, 192, 152)
-        mask_crop = crop_ceter(mask_array, 192, 152)
+        flair_crop = crop_ceter(flair_array_nor, 192, 192)
+        t1_crop = crop_ceter(t1_array_nor, 192, 192)
+        t1ce_crop = crop_ceter(t1ce_array_nor, 192, 192)
+        t2_crop = crop_ceter(t2_array_nor, 192, 192)
+        mask_crop = crop_ceter(mask_array, 192, 192)
 
-        # 5、分块处理
-        # patch_block_size = BLOCKSIZE
-        # numberxy = patch_block_size[1] # 192
-        # numberz = 8  # patch_block_size[0]
-        # # width = np.shape(flair_crop)[1]
-        # # height = np.shape(flair_crop)[2]
-        # # imagez = np.shape(flair_crop)[0]
-        # block_width = np.array(patch_block_size)[1]
-        # block_height = np.array(patch_block_size)[2]
-        # blockz = np.array(patch_block_size)[0]
-        # stridewidth = (width - block_width) // numberxy
-        # strideheight = (height - block_height) // numberxy
-        # stridez = (imagez - blockz) // numberz
-        # step_width = width - (stridewidth * numberxy + block_width)
-        # step_width = step_width // 2
-        # step_height = height - (strideheight * numberxy + block_height)
-        # step_height = step_height // 2
-        # step_z = imagez - (stridez * numberz + blockz)
-        # step_z = step_z // 2
-
-        # hr_samples_flair_list = []
-        # hr_samples_t1_list = []
-        # hr_samples_t1ce_list = []
-        # hr_samples_t2_list = []
-        # hr_mask_samples_list = []
-        # patchnum = []
-        # for z in range(step_z, numberz * (stridez + 1) + step_z, numberz):
-        #     for x in range(step_width, numberxy * (stridewidth + 1) + step_width, numberxy):
-        #         for y in range(step_height, numberxy * (strideheight + 1) + step_height, numberxy):
-        #             if np.max(mask_crop[z:z + blockz, x:x + block_width, y:y + block_height]) != 0:
-        #                 print("切%d" % z)
-        #                 patchnum.append(z)
-        #                 hr_samples_flair_list.append(flair_crop[z:z + blockz, x:x + block_width, y:y + block_height])
-        #                 hr_samples_t1_list.append(t1_crop[z:z + blockz, x:x + block_width, y:y + block_height])
-        #                 hr_samples_t1ce_list.append(t1ce_crop[z:z + blockz, x:x + block_width, y:y + block_height])
-        #                 hr_samples_t2_list.append(t2_crop[z:z + blockz, x:x + block_width, y:y + block_height])
-        #                 hr_mask_samples_list.append(mask_crop[z:z + blockz, x:x + block_width, y:y + block_height])
-        # samples_flair = np.array(flair_crop).reshape(
-        #     (len(flair_crop), 146, 192, 152))
-        # samples_t1 = np.array(t1_crop).reshape((len(t1_crop), 146, 192, 152))
-        # samples_t1ce = np.array(t1ce_crop).reshape(
-        #     (len(t1ce_crop), 146, 192, 152))
-        # samples_t2 = np.array(t2_crop).reshape((len(t2_crop), 146, 192, 152))
-
-        # samples, imagez, height, width = np.shape(samples_flair)[0], np.shape(samples_flair)[1], \
-        #     np.shape(samples_flair)[2], np.shape(samples_flair)[3]
-        # 5、合并和保存
-        # samples = np.zeros((4, 192, 192, 4), np.float64)
-        # for j in range(len(pathhgg_list)):
         """
         merage 4 model image into 4 channel (imagez,width,height,channel)
         """
-        fourmodelimagearray = np.zeros((146, 192, 152, 4), np.float64)
+        fourmodelimagearray = np.zeros((160, 192, 192, 4), np.float64)
 
         tempName = str(pathhgg_list[subsetindex]).replace("Training", flag)
 
@@ -277,7 +217,7 @@ def generate(outputImg_path, outputMask_path, pathhgg_list, flag='train'):
         fourmodelimagearray[:, :, :, 3] = t2image
         np.save(filepath1, fourmodelimagearray)
 
-        wt_tc_etMaskArray = np.zeros((146, 192, 152, 3), np.uint8)
+        wt_tc_etMaskArray = np.zeros((160, 192, 192, 3), np.uint8)
         mask_one_sample = mask_crop
         WT_Label = mask_one_sample.copy()
         WT_Label[mask_one_sample == 1] = 1.
